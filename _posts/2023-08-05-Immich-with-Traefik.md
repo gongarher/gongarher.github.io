@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Immich over Traefik on Raspberry Pi - Lightweight & minimal"
+title:  "Immich behind Traefik on Raspberry Pi - Lightweight & minimal"
 author: Gonzalo García Hernantes
 categories: [ photos, docker, traefik ]
 image: assets/images/immich.png
