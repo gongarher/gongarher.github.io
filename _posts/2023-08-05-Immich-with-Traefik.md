@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "Immich behind Traefik on Raspberry Pi - Lightweight & minimal"
-author: Gonzalo García Hernantes
+author: gonzalo
 categories: [ photos, docker, traefik ]
-image: assets/images/immich.png
+image: assets/images/immich_traefik.png
 ---
 
 This project was born with the necessity of owning a lightweight self-hosted media service that accomplishes the functionality of Google Drive. After trying to setup multiple containers such as nextcloud, filestash or photoprism, I come up with this solution that combines [Immich](https://immich.app/) and [Traefik](https://doc.traefik.io/traefik/) due to its low-resources. Take into account that I have to **focus on the resoure's efficiency** if I want to keep my Raspberry Pi 4 1Gb running smoothly.

@@ -3,7 +3,7 @@ name: "Gonzalo's Blog"
 title: "Mediumish"
 description: "Personal blog with self-hosting guides and tutorials"
 logo: 'assets/images/logo.png'
-favicon: 'assets/images/logo.png'
+favicon: 'assets/images/favicon.ico'
 baseurl: /
 google_analytics: 'UA-46278016-1'
 disqus: 'demowebsite'
@@ -13,12 +13,12 @@ permalink: /:title/
 
 # Authors
 authors:
-  john:
+  gonzalo:
     name: Gonzalo García Hernantes
     display_name: Gonzalo    
     avatar: 'assets/images/avatar.jpg'
     # gravatar: b1cc14991db7a456fcd761680bbc8f81
-    email: wowthemesnet@gmail.com
+    email: gonzalo.garhtes@gmail.com
     web: https://blog.gonzaverse.com
     linkedin: https://www.linkedin.com/in/gonzalogarcia-h/
     description: "I'm Gonzalo, a young DevOps engineer. In my spare time, I like to have some fun with my Raspberry which allows me to learn new things about Linux and microservices."
