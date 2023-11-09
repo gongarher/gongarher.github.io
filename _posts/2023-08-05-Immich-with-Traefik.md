@@ -219,8 +219,8 @@ Now I can access to my immich instance from anywhere via the Internet just typpi
 
 ## Source documentation
 
-+ https://documentation.immich.app/docs/developer/architecture
-+ https://documentation.immich.app/docs/administration/reverse-proxy
++ https://documentation.immich.app/docs/developer/architecture(https://documentation.immich.app/docs/developer/architecture)
++ https://documentation.immich.app/docs/administration/reverse-proxy(https://documentation.immich.app/docs/administration/reverse-proxy)
   
 
 
