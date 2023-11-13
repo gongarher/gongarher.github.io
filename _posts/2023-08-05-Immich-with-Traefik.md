@@ -6,7 +6,7 @@ categories: [ photos, docker, traefik ]
 image: assets/images/immich_traefik.png
 ---
 
-This project was born with the necessity of owning a lightweight self-hosted media service that accomplishes the functionality of Google Drive. After trying to setup multiple containers such as nextcloud, filestash or photoprism, I come up with this solution that combines [Immich](https://immich.app/) and [Traefik](https://doc.traefik.io/traefik/) due to its low-resources. Take into account that I have to **focus on the resoure's efficiency** if I want to keep my Raspberry Pi 4 1Gb running smoothly.
+This project was born with the necessity of owning a lightweight self-hosted media service that accomplishes the functionality of Google Photos. After trying to setup multiple containers such as nextcloud, filestash or photoprism, I come up with this solution that combines [Immich](https://immich.app/) and [Traefik](https://doc.traefik.io/traefik/) due to its low-resources. Take into account that I have to **focus on the resoure's efficiency** if I want to keep my Raspberry Pi 4 1Gb running smoothly.
 
 In this post, I will explain all the steps I followed to get everything up & running.
 
@@ -217,7 +217,7 @@ Note: It's an external network due to I have already defined the network in my t
 
 Now I can access to my immich instance from anywhere via the Internet just typping **https://immich.MY_DOMAIN** 
 
-## Source documentation
+## Documentation
 
 + [https://documentation.immich.app/docs/developer/architecture](https://documentation.immich.app/docs/developer/architecture)
 + [https://documentation.immich.app/docs/administration/reverse-proxy](https://documentation.immich.app/docs/administration/reverse-proxy)
