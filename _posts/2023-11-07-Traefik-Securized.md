@@ -3,7 +3,7 @@ layout: post
 title:  "Traefik V2: Hardened Setup & Dashboard - Docker Compose"
 author: gonzalo
 categories: [ security, docker, traefik, reverse-proxy ]
-image: assets/images/traefik-arquitecture.png
+image: assets/images/traefik-arquitecture.webp
 ---
 
 ## Why Traefik?
