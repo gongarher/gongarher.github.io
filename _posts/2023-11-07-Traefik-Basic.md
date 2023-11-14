@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Traefik V2: Hardened Setup & Dashboard - Docker Compose"
+title:  "Traefik V2: Basic Setup & Dashboard - Docker Compose"
 author: gonzalo
 categories: [ security, docker, traefik, reverse-proxy ]
 image: assets/images/traefik-architecture.webp
@@ -64,7 +64,7 @@ networks:
     driver: bridge
 ```
 
-### Enableing dashboard
+### Enabling dashboard
 This example includes traefik dashboard configuration, a UI that shows the status of our traefik resources as routers, services, middlewares, and so on. There are several ways to configure the dashboard, I chose to redirect port 8080 and create a traefik router (via labels) that provides its dashboard when accessing [http://HOST_LOCAL_IP:8080/dashboard/](http://HOST_LOCAL_IP:8080/dashboard/)
 
 ![walking]({{ site.baseurl }}/assets/images/traefik-dashboard.png)
@@ -72,12 +72,98 @@ This example includes traefik dashboard configuration, a UI that shows the statu
 ## traefik.yml & dynamic_conf.yaml
 These are both configuration files, known as "static" and "dynamic" configurations, respectively. I'm going to leave the dynamic configuration as an empty file and explain its contents in the following post due to it involves advanced concepts and routing.
 
-### Endpoints
+The purpose of the static configuration file is to define common resources in our traefik infrastructure. I started enabling the **API** to access to get my preconfigured dashboard, setting **insecure: true** due to I access locally through an unencrypted connection (HTTP). Another mandatory resource to define is entrypoints. Matching with previously opened ports (80 and 443), I have defined web (HTTP) port and redirected its incoming traffic to the HTTPS port (websecure). This is the way to **enforce secure and encrypted connections** (via https).
+
+Finally, I define letsencrypt as my certificate resolver. It will provide us free certificates, automate their renewal, and run a protocol which is called Automatic Certificate Management Environment (ACME). Letsencrypt needs to validate our traffic and distinguish between users and malicious bots, this is done by running an httpChallenge.
+
+At the end of the file, I configured the docker provider defining the traefik network and docker endpoint, using the **docker socket** volume mount that I have previously defined in the docker-compose file. This allows traefik to interact with other containers and create resources based on their labels. We will see an example in the following section. Here it is the complete traefik.yml file:
+
+#### traefik.yml
+```yaml
+api:
+  dashboard: true
+  insecure: true
+
+ping: true # healthcheck
+
+entryPoints:
+  # http redirect to https
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  # https
+  websecure:
+    address: :443
+    http:
+      tls:
+        certResolver: letsencrypt
+
+# letsencrypt TLS
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: <YOUR_EMAIL_HERE>
+      storage: /etc/traefik/acme/acme.json
+      tlsChallenge: {}
+      httpChallenge:
+        entryPoint: web
+
+providers:
+  file:
+    filename: /etc/traefik/dynamic_conf.yaml # blank file at this point
+    watch: true
+  docker:
+    watch: true
+    exposedByDefault: false
+    endpoint: unix:///var/run/docker.sock
+    network: traefik-public
+```
+
+At this point, everything has been defined so it's time to create our traefik service!
+```bash
+docker compose -f docker-compose.yaml up -d
+```
 
 ## Test deployment
+Let's test the traefik container by creating a new service:
+
+```yaml
+version: "3.7"
+services:
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    networks:
+      - traefik-public
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.whoami.rule: Host (`<HOST_LOCAL_IP>`) && PathPrefix(`/whoami`)
+      traefik.http.routers.dashboard.entrypoints: web
+```
+
+This service has to be deployed in the traefik-publiic network. Also, I have created an HTTP router that tells traefik how to respond. When trying to access **http://HOST_LOCAL_IP/whoami** on your LAN, traefik would respond by redirecting the request to the whoami services via HTTPS (without SSL cert because we are accessing a local IP). We would see the following information:
+
+![walking]({{ site.baseurl }}/assets/images/traefik-whoami.png)
+
+Alternatively, we can get the same response by running the curl command:
+```bash
+curl -k http://HOST_LOCAL_IP/whoami
+```
+
+Congrats! You have correctly configured your traefik service and it's up & running!!
+
 
 ## Conclusion and further improvements
+
+To conclude, I'd like to note that whereas setting up a minimal traefik service is very straightforward, reaching a hardened configuration could need some expertise. In the following post, I will explain how to improve security via traefik plugins, docker socket-proxy, middlewares, access logs and other services. 
 
 ## Documentation
   + [https://doc.traefik.io/traefik/master/](https://doc.traefik.io/traefik/master/)
   + [https://doc.traefik.io/traefik/getting-started/configuration-overview/](https://doc.traefik.io/traefik/getting-started/configuration-overview/)
+  + [https://doc.traefik.io/traefik/https/acme/](https://doc.traefik.io/traefik/https/acme/)
+  + [https://doc.traefik.io/traefik/providers/docker/](https://doc.traefik.io/traefik/providers/docker/)
+  + [https://doc.traefik.io/traefik/getting-started/quick-start/](https://doc.traefik.io/traefik/getting-started/quick-start/)
